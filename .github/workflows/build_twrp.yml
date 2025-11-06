@@ -37,7 +37,7 @@ jobs:
         cp out/target/product/goya/recovery.img $GITHUB_WORKSPACE/output/ || true
 
     - name: Upload compiled images
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: twrp-goya-build
         path: output/
