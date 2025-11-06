@@ -6,8 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    env:
-      ACTIONS_RUNNER_DEBUG: true
 
     steps:
     - name: Checkout repository
@@ -35,20 +33,20 @@ jobs:
     - name: Install repo tool
       run: |
         echo "📦 Installing repo..."
-        mkdir -p ~/.bin
-        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
-        chmod a+x ~/.bin/repo
-        echo 'export PATH=~/.bin:$PATH' >> ~/.bashrc
-        source ~/.bashrc
-        repo version
+        mkdir -p ~/bin
+        curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+        export PATH="$HOME/bin:$PATH"
+        echo "✅ Repo installed at: $(which repo)"
+        repo --version || echo "⚠️ Repo version check failed but continuing..."
 
     - name: Initialize TWRP source
       run: |
-        export PATH=~/.bin:$PATH
+        export PATH="$HOME/bin:$PATH"
         mkdir -p ~/android/twrp
         cd ~/android/twrp
-        repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
-        repo sync -j$(nproc)
+        ~/bin/repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1
+        ~/bin/repo sync -j$(nproc)
 
     - name: Clone device tree
       run: |
@@ -57,7 +55,7 @@ jobs:
 
     - name: Build recovery
       run: |
-        export PATH=~/.bin:$PATH
+        export PATH="$HOME/bin:$PATH"
         cd ~/android/twrp
         source build/envsetup.sh
         lunch omni_goya-eng
